@@ -1,4 +1,4 @@
-package com.example.workproject
+package com.example.workproject.api
 
 data class PostModel(
     val activity: String? =null,
@@ -9,3 +9,4 @@ data class PostModel(
     val key: String? =null,
     val accesibility: Int? =null
 )
+

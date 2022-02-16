@@ -1,4 +1,4 @@
-package com.example.workproject
+package com.example.workproject.database
 
 import android.app.Application
 import com.example.workproject.database.ActivityDatabase

@@ -1,6 +1,6 @@
 package com.example.workproject
 
-import com.example.workproject.database.Activity
+import com.example.workproject.database.ActivityTable
 import com.example.workproject.database.ActivityDao
 import kotlinx.coroutines.launch
 import androidx.lifecycle.LiveData
@@ -11,17 +11,65 @@ import androidx.lifecycle.viewModelScope
 
 
 
-class ActivityViewModel (private val activityDao: ActivityDao) : ViewModel(){
-    val allItems: LiveData<List<Activity>> = activityDao.getItems().asLiveData()
+class ActivityViewModel (private val activityDao: ActivityDao) : ViewModel() {
+    val allItems: LiveData<List<ActivityTable>> = activityDao.getItems().asLiveData()
 
-    fun addNewItem(itemActivity: String, itemType: String,itemParticipants: Int, itemPrice: Double) {
-        val newItem = getNewItemEntry(itemActivity, itemType,itemParticipants, itemPrice)
+
+    fun updateItem(
+        itemId: Int,
+        itemActivity: String,
+        itemType: String,
+        itemParticipants: Int,
+        itemPrice: Double
+    ) {
+        val updatedItem =
+            getUpdatedItemEntry(itemId, itemActivity, itemType, itemParticipants, itemPrice)
+        updateItem(updatedItem)
+    }
+
+    fun addNewItem(
+        itemActivity: String,
+        itemType: String,
+        itemParticipants: Int,
+        itemPrice: Double
+    ) {
+        val newItem = getNewItemEntry(itemActivity, itemType, itemParticipants, itemPrice)
         insertItem(newItem)
     }
 
-    private fun getNewItemEntry(itemActivity: String, itemType: String, itemParticipants: Int, itemPrice: Double): Activity {
-        return Activity(
-            activity = itemActivity,
+    fun deleteItem(activity: ActivityTable) {
+        viewModelScope.launch {
+            activityDao.delete(activity)
+        }
+    }
+
+
+    fun retrieveItem(id: Int): LiveData<ActivityTable> {
+        return activityDao.getItem(id).asLiveData()
+    }
+
+
+    fun isEntryValid(
+        itemActivity: String,
+        itemType: String,
+        itemParticipants: String,
+        itemPrice: String
+    ): Boolean {
+        if (itemActivity.isBlank() || itemType.isBlank() || itemParticipants.isBlank() || itemPrice.isBlank()) {
+            return false
+        }
+        return true
+    }
+
+
+    private fun getNewItemEntry(
+        itemActivity: String,
+        itemType: String,
+        itemParticipants: Int,
+        itemPrice: Double
+    ): ActivityTable {
+        return ActivityTable(
+            activityType = itemActivity,
             type = itemType,
             participants = itemParticipants,
             price = itemPrice
@@ -29,10 +77,32 @@ class ActivityViewModel (private val activityDao: ActivityDao) : ViewModel(){
 
     }
 
-    private fun insertItem(activity: Activity) {
+    private fun insertItem(activity: ActivityTable) {
         viewModelScope.launch {
-           activityDao.insert(activity)
+            activityDao.insert(activity)
         }
+    }
+
+
+    private fun updateItem(activity: ActivityTable) {
+        viewModelScope.launch {
+            activityDao.update(activity)
+        }
+    }
+    private fun getUpdatedItemEntry(
+        itemId: Int,
+        itemActivity: String,
+        itemType: String,
+        itemParticipants: Int,
+        itemPrice: Double
+    ): ActivityTable {
+        return ActivityTable(
+            id = itemId,
+            activityType = itemActivity,
+            type = itemType,
+            participants = itemParticipants,
+            price = itemPrice
+        )
     }
 
 }

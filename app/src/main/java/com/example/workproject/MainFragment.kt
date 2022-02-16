@@ -12,18 +12,16 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.workproject.api.ApiService
+import com.example.workproject.api.PostModel
+import com.example.workproject.api.ServiceGenerator
+import com.example.workproject.database.ActivityApplication
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Response
 
 
 class MainFragment : Fragment() {
-    private val result1= "Result #1"
 
     var navController: NavController? = null
 
@@ -38,7 +36,6 @@ class MainFragment : Fragment() {
         )
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,9 +46,8 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //Initiate a navcontroller that has a reference to the nav graph,and view
-        navController = Navigation.findNavController(view)
 
+        navController = Navigation.findNavController(view)
 
         val serviceGenerator = ServiceGenerator.buildService(ApiService::class.java)
         val call = serviceGenerator.getPosts()
@@ -64,14 +60,13 @@ class MainFragment : Fragment() {
                 ) {
                     if (response.isSuccessful) {
                         Log.e("SUCCESS", response.body().toString())
-                        val postModel = PostModel()
                         Log.e("ACTIVITY", response.body()?.activity.toString() )
                         view.findViewById<TextView>(R.id.tvActivity).text = response.body()?.activity.toString()
                         view.findViewById<TextView>(R.id.tvType).text =response.body()?.type.toString()
                         view.findViewById<TextView>(R.id.tvParticipants).text=response.body()?.participants.toString()
                         view.findViewById<TextView>(R.id.tvPrice).text =  response.body()?.price.toString()
 
-
+                        view.findViewById<FloatingActionButton>(R.id.save).setVisibility(View.VISIBLE)
                     }
                 }
 
@@ -84,12 +79,9 @@ class MainFragment : Fragment() {
             })
 
         }
-
         //initiating get request
-
         view.findViewById<Button>(R.id.btnClick).setOnClickListener{
             getRequest()
-            view.findViewById<FloatingActionButton>(R.id.save).setVisibility(View.VISIBLE)
 
         }
 
@@ -107,40 +99,15 @@ class MainFragment : Fragment() {
 
         view.findViewById<FloatingActionButton>(R.id.save).setOnClickListener {
             add()
-
+            //navController?.navigate(R.id.action_mainFragment_to_itemListFragment)
+            findNavController().navigate(MainFragmentDirections.actionMainFragmentToItemListFragment())
 
     }
-
-
-
-
     }
 
 
 }
 
-//view.findViewById<Button>(R.id.btnClick).setOnClickListener{
-//    Log.e("ACTIVITY2", response.body()?.activity.toString() )
-//    view.findViewById<TextView>(R.id.tvActivity).text = response.body()?.activity.toString()
-//    view.findViewById<TextView>(R.id.tvType).text =response.body()?.type.toString()
-//    view.findViewById<TextView>(R.id.tvParticipants).text=response.body()?.participants.toString()
-//    view.findViewById<TextView>(R.id.tvPrice).text =  response.body()?.price.toString()
-//
-//
-//
-//    view.findViewById<FloatingActionButton>(R.id.save).setVisibility(View.VISIBLE)
-//    view.findViewById<FloatingActionButton>(R.id.save).setOnClickListener {
-//        Log.e("PARTICIPANTS",view.findViewById<TextView>(R.id.tvParticipants).text.toString() )
-//        viewModel.addNewItem(
-//            view.findViewById<TextView>(R.id.tvActivity).text.toString(),
-//            view.findViewById<TextView>(R.id.tvType).text.toString(),
-//            Integer.parseInt(view.findViewById<TextView>(R.id.tvParticipants).text.toString()),
-//            view.findViewById<TextView>(R.id.tvPrice).text.toString().toDouble()
-//        )
-//
-//    }
-//
-//}
 
 
 

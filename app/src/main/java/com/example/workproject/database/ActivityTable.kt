@@ -5,11 +5,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName ="activities_table")
-data class Activity(
+data class ActivityTable(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    @ColumnInfo(name = "activity")
-    val activity: String,
+    @ColumnInfo(name = "activityTpe")
+    val activityType: String,
     @ColumnInfo(name = "type")
     val type: String,
     @ColumnInfo(name = "participants")

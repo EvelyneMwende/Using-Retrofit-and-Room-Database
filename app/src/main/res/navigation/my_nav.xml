@@ -8,18 +8,53 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.workproject.MainFragment"
-        android:label="MainFragment" >
+        android:label="Get Request" >
         <action
-            android:id="@+id/action_mainFragment_to_databaseFragment"
-            app:destination="@id/databaseFragment" />
+            android:id="@+id/action_mainFragment_to_itemListFragment"
+            app:destination="@id/itemListFragment" />
     </fragment>
     <fragment
-        android:id="@+id/databaseFragment"
-        android:name="com.example.workproject.DatabaseFragment"
-        android:label="fragment_database"
-        tools:layout="@layout/fragment_database" >
+        android:id="@+id/itemListFragment"
+        android:name="com.example.workproject.ItemListFragment"
+        android:label="Room Database"
+        tools:layout="@layout/item_list_fragment" >
         <action
-            android:id="@+id/action_databaseFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            android:id="@+id/action_itemListFragment_to_itemDetailFragment"
+            app:destination="@id/itemDetailFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_itemListFragment_to_addItemFragment"
+            app:destination="@id/addItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/itemDetailFragment"
+        android:name="com.example.workproject.ItemDetailFragment"
+        android:label="Item Details"
+        tools:layout="@layout/fragment_item_detail">
+        <argument
+            android:name="item_id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_itemDetailFragment_to_addItemFragment"
+            app:destination="@id/addItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addItemFragment"
+        android:name="com.example.workproject.AddItemFragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_add_item">
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="item_id"
+            android:defaultValue="-1"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_addItemFragment_to_itemListFragment"
+            app:destination="@id/itemListFragment"
+            app:popUpTo="@id/itemListFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

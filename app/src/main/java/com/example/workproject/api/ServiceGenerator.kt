@@ -1,4 +1,4 @@
-package com.example.workproject
+package com.example.workproject.api
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
