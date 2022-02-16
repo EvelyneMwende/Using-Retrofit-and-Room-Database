@@ -1,5 +1,6 @@
 package com.example.workproject
 
+import android.widget.Toast
 import com.example.workproject.database.ActivityTable
 import com.example.workproject.database.ActivityDao
 import kotlinx.coroutines.launch
@@ -19,11 +20,11 @@ class ActivityViewModel (private val activityDao: ActivityDao) : ViewModel() {
         itemId: Int,
         itemActivity: String,
         itemType: String,
-        itemParticipants: Int,
-        itemPrice: Double
+        itemParticipants: String,
+        itemPrice: String
     ) {
         val updatedItem =
-            getUpdatedItemEntry(itemId, itemActivity, itemType, itemParticipants, itemPrice)
+            getUpdatedItemEntry(itemId, itemActivity, itemType, itemParticipants.toInt(), itemPrice.toDouble())
         updateItem(updatedItem)
     }
 
@@ -56,6 +57,7 @@ class ActivityViewModel (private val activityDao: ActivityDao) : ViewModel() {
         itemPrice: String
     ): Boolean {
         if (itemActivity.isBlank() || itemType.isBlank() || itemParticipants.isBlank() || itemPrice.isBlank()) {
+
             return false
         }
         return true

@@ -47,6 +47,18 @@ class AddItemFragment : Fragment() {
         return binding.root
     }
 
+    private fun valid():Boolean{
+        if(binding.itemActivity.text.toString().isBlank() ||
+            binding.itemType.text.toString().isBlank() ||
+            binding.itemParticipants.text.toString().isBlank() ||
+                binding.itemPrice.text.toString().isBlank()){
+
+            Toast.makeText(requireActivity(), "Please fill all fields", Toast.LENGTH_LONG).show()
+            return false
+        }
+        return true
+    }
+
     private fun isEntryValid(): Boolean {
         return viewModel.isEntryValid(
             binding.itemActivity.text.toString(),
@@ -70,7 +82,8 @@ class AddItemFragment : Fragment() {
 
 
     private fun addNewItem() {
-        if (isEntryValid()) {
+        if (valid()) {
+
             viewModel.addNewItem(
                 binding.itemActivity.text.toString(),
                 binding.itemType.text.toString(),
@@ -80,23 +93,34 @@ class AddItemFragment : Fragment() {
             val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()
             findNavController().navigate(action)
         }
+        else{
+
+            Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun updateItem() {
-        if (isEntryValid()) {
+        if (valid()) {
+            Log.e("FUll FIELDS", "FULLLLLL")
             //this.arguments?.getInt("item_id")?.let {
                 viewModel.updateItem(
                     //it,
-                    this.navigationArgs.itemId,
-                    this.binding.itemActivity.text.toString(),
-                    this.binding.itemType.text.toString(),
-                    this.binding.itemParticipants.text.toString().toInt(),
-                    this.binding.itemPrice.text.toString().toDouble()
+                    navigationArgs.itemId,
+                    binding.itemActivity.text.toString(),
+                    binding.itemType.text.toString(),
+                    binding.itemParticipants.text.toString(),
+                    binding.itemPrice.text.toString()
 
                 )
             //}
             val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()
             findNavController().navigate(action)
+        }
+
+        else{
+            Log.e("EMPTY FIELD", "A field is empty")
+            val toast =Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_LONG)
+            toast.show()
         }
 
     }
@@ -106,8 +130,8 @@ class AddItemFragment : Fragment() {
 
         //val id = navigationArgs.itemId
         val id = arguments?.getInt("item_id")
-        val title = arguments?.getInt("title")
-        Log.e("ID and TITLE", " "+id + " " +title)
+//        val title = arguments?.getInt("title")
+//        Log.e("ID and TITLE", " "+id + " " +title)
         if (id != null) {
             if (id > 0) {
                 viewModel.retrieveItem(id).observe(this.viewLifecycleOwner) { selectedItem ->
